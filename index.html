@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>For Lieynnie 💜</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100%;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: white;
+
+            background: #5b16a8;
+        }
+
+        /* =========================
+           BACKGROUND
+        ========================= */
+
+        .background {
+            position: fixed;
+            inset: 0;
+
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+            object-position: center;
+
+            z-index: -10;
+        }
+
+        .dark-overlay {
+            position: fixed;
+            inset: 0;
+
+            background: rgba(30, 0, 55, 0.18);
+
+            z-index: -5;
+            pointer-events: none;
+        }
+
+        /* =========================
+           MAIN SCREEN
+        ========================= */
+
+        .screen {
+            min-height: 100vh;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            padding: 25px;
+
+            transition:
+                opacity 0.6s ease,
+                transform 0.6s ease;
+        }
+
+        .screen.hidden {
+            display: none;
+        }
+
+        /* =========================
+           ENVELOPE AREA
+        ========================= */
+
+        .intro {
+            text-align: center;
+        }
+
+        .intro h1 {
+            margin-bottom: 8px;
+
+            font-size: 30px;
+
+            color: #ffffff;
+
+            text-shadow:
+                0 3px 15px rgba(0, 0, 0, 0.35);
+        }
+
+        .intro p {
+            margin-top: 0;
+            margin-bottom: 35px;
+
+            font-size: 16px;
+
+            color: #f4ddff;
+        }
+
+        .envelope-container {
+            position: relative;
+
+            width: 300px;
+            height: 210px;
+
+            margin: auto;
+
+            cursor: pointer;
+
+            filter:
+                drop-shadow(0 25px 30px rgba(0, 0, 0, 0.35));
+
+            transition:
+                transform 0.3s ease;
+        }
+
+        .envelope-container:hover {
+            transform: translateY(-8px) scale(1.03);
+        }
+
+        .envelope {
+            position: absolute;
+
+            bottom: 0;
+            left: 0;
+
+            width: 300px;
+            height: 185px;
+
+            background: #b96be8;
+
+            border-radius: 8px;
+
+            overflow: visible;
+        }
+
+        /* envelope back */
+        .envelope-back {
+            position: absolute;
+            inset: 0;
+
+            background: #9f4fd2;
+
+            border-radius: 8px;
+        }
+
+        /* letter inside */
+        .letter {
+            position: absolute;
+
+            left: 25px;
+            bottom: 10px;
+
+            width: 250px;
+            height: 155px;
+
+            background: #f6eaff;
+
+            border-radius: 5px;
+
+            z-index: 2;
+
+            transition:
+                transform 0.9s ease,
+                bottom 0.9s ease;
+        }
+
+        .letter::before {
+            content: "💜";
+
+            position: absolute;
+
+            top: 48px;
+            left: 50%;
+
+            transform: translateX(-50%);
+
+            font-size: 30px;
+        }
+
+        /* front pocket */
+        .envelope-front {
+            position: absolute;
+
+            left: 0;
+            bottom: 0;
+
+            width: 0;
+            height: 0;
+
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-bottom: 95px solid #a855d9;
+
+            z-index: 4;
+        }
+
+        /* flap */
+        .flap {
+            position: absolute;
+
+            top: 0;
+            left: 0;
+
+            width: 0;
+            height: 0;
+
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-top: 100px solid #c477ed;
+
+            transform-origin: top center;
+
+            z-index: 5;
+
+            transition:
+                transform 0.9s ease;
+        }
+
+        .seal {
+            position: absolute;
+
+            left: 50%;
+            top: 78px;
+
+            transform: translateX(-50%);
+
+            width: 48px;
+            height: 48px;
+
+            border-radius: 50%;
+
+            background: #8e3fc2;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-size: 23px;
+
+            z-index: 6;
+
+            box-shadow:
+                0 5px 15px rgba(0, 0, 0, 0.25);
+
+            transition:
+                opacity 0.4s ease;
+        }
+
+        /* opened envelope */
+
+        .envelope-container.opening .flap {
+            transform: rotateX(180deg);
+        }
+
+        .envelope-container.opening .letter {
+            bottom: 90px;
+
+            transform: translateY(-20px);
+        }
+
+        .envelope-container.opening .seal {
+            opacity: 0;
+        }
+
+        .click-text {
+            margin-top: 28px;
+
+            font-size: 14px;
+
+            color: #f6ddff;
+
+            animation: pulse 1.8s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* =========================
+           CHOICE SCREEN
+        ========================= */
+
+        .choice-box {
+            width: 100%;
+            max-width: 650px;
+
+            text-align: center;
+
+            padding: 40px 25px;
+
+            background: rgba(45, 5, 70, 0.55);
+
+            border: 1px solid rgba(255, 255, 255, 0.25);
+
+            border-radius: 28px;
+
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.35);
+        }
+
+        .choice-box h2 {
+            margin-top: 0;
+
+            font-size: 30px;
+
+            color: #ffffff;
+        }
+
+        .choice-box p {
+            color: #ead5f8;
+
+            line-height: 1.6;
+        }
+
+        .buttons {
+            display: flex;
+
+            justify-content: center;
+
+            gap: 20px;
+
+            margin-top: 30px;
+        }
+
+        .choice-btn {
+            min-width: 180px;
+
+            padding: 15px 25px;
+
+            border: none;
+
+            border-radius: 50px;
+
+            font-size: 17px;
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition:
+                transform 0.25s ease,
+                box-shadow 0.25s ease;
+        }
+
+        .choice-btn:hover {
+            transform: translateY(-4px);
+
+            box-shadow:
+                0 10px 25px rgba(0, 0, 0, 0.25);
+        }
+
+        .open-btn {
+            background: #d88aff;
+
+            color: #40105e;
+        }
+
+        .close-btn {
+            background: rgba(255, 255, 255, 0.9);
+
+            color: #63217e;
+        }
+
+        /* =========================
+           CLOSE CONFIRMATION
+        ========================= */
+
+        .sad {
+            font-size: 55px;
+
+            margin-bottom: 10px;
+        }
+
+        .sad-box h2 {
+            color: #ffffff;
+        }
+
+        .back-btn {
+            margin-top: 25px;
+
+            padding: 12px 28px;
+
+            border: 1px solid rgba(255, 255, 255, 0.4);
+
+            border-radius: 30px;
+
+            background: rgba(255, 255, 255, 0.15);
+
+            color: white;
+
+            cursor: pointer;
+
+            font-size: 15px;
+
+            transition: 0.25s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.28);
+
+            transform: translateY(-2px);
+        }
+
+        /* =========================
+           MESSAGE
+        ========================= */
+
+        .message-screen {
+            align-items: flex-start;
+
+            padding-top: 50px;
+            padding-bottom: 50px;
+        }
+
+        .paper {
+            width: 100%;
+            max-width: 750px;
+
+            padding: 45px;
+
+            background: rgba(239, 218, 255, 0.94);
+
+            border: 2px solid rgba(255, 255, 255, 0.9);
+
+            border-radius: 28px;
+
+            box-shadow:
+                0 20px 60px rgba(35, 0, 55, 0.4);
+
+            color: #48245b;
+
+            animation: paperIn 0.8s ease;
+        }
+
+        @keyframes paperIn {
+            from {
+                opacity: 0;
+                transform: translateY(35px) scale(0.96);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .paper-heart {
+            text-align: center;
+
+            font-size: 42px;
+
+            margin-bottom: 5px;
+        }
+
+        .paper h1 {
+            text-align: center;
+
+            color: #74369a;
+
+            font-size: 30px;
+
+            line-height: 1.4;
+
+            margin-top: 0;
+            margin-bottom: 30px;
+        }
+
+        .paper h1 b {
+            color: #a449ce;
+        }
+
+        .paper p {
+            font-size: 17px;
+
+            line-height: 1.8;
+
+            color: #4d3158;
+
+            margin-bottom: 23px;
+        }
+
+        .signature {
+            text-align: center;
+
+            margin-top: 35px;
+
+            font-size: 18px;
+
+            line-height: 1.8;
+
+            color: #74369a;
+        }
+
+        .signature b {
+            color: #a449ce;
+        }
+
+        .restart {
+            display: block;
+
+            margin: 30px auto 0;
+
+            padding: 12px 25px;
+
+            border: none;
+
+            border-radius: 30px;
+
+            background: #a449ce;
+
+            color: white;
+
+            cursor: pointer;
+
+            font-size: 15px;
+        }
+
+        /* =========================
+           MUSIC BUTTON
+        ========================= */
+
+        .music-btn {
+            position: fixed;
+
+            right: 18px;
+            bottom: 18px;
+
+            width: 48px;
+            height: 48px;
+
+            border: none;
+
+            border-radius: 50%;
+
+            background: rgba(60, 5, 90, 0.75);
+
+            color: white;
+
+            font-size: 20px;
+
+            cursor: pointer;
+
+            z-index: 100;
+
+            box-shadow:
+                0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 600px) {
+
+            .screen {
+                padding: 18px;
+            }
+
+            .intro h1 {
+                font-size: 25px;
+            }
+
+            .intro p {
+                font-size: 14px;
+            }
+
+            .envelope-container {
+                transform: scale(0.85);
+            }
+
+            .envelope-container:hover {
+                transform: scale(0.88);
+            }
+
+            .buttons {
+                flex-direction: column;
+
+                align-items: center;
+            }
+
+            .choice-btn {
+                width: 90%;
+            }
+
+            .choice-box {
+                padding: 30px 20px;
+            }
+
+            .choice-box h2 {
+                font-size: 25px;
+            }
+
+            .message-screen {
+                padding: 25px 12px;
+            }
+
+            .paper {
+                padding: 28px 20px;
+
+                border-radius: 22px;
+            }
+
+            .paper h1 {
+                font-size: 24px;
+            }
+
+            .paper p {
+                font-size: 15px;
+
+                line-height: 1.7;
+            }
+
+            .signature {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =========================
+         BACKGROUND
+    ========================= -->
+
+    <img src="bg.png" class="background" alt="Purple heart background">
+
+    <div class="dark-overlay"></div>
+
+
+    <!-- =========================
+         MUSIC
+    ========================= -->
+
+    <audio id="music" loop>
+        <source src="Totoong Tayo.mp3" type="audio/mpeg">
+    </audio>
+
+    <button class="music-btn" id="musicBtn" onclick="toggleMusic()">
+        🎵
+    </button>
+
+
+    <!-- =========================
+         SCREEN 1
+    ========================= -->
+
+    <section class="screen" id="introScreen">
+
+        <div class="intro">
+
+            <h1>For Lieynnie Walker na Maasim 💜</h1>
+
+            <p>
+                May maliit lang akong message para sa'yo.
+            </p>
+
+            <div class="envelope-container" id="envelope" onclick="openEnvelope()">
+
+                <div class="envelope">
+
+                    <div class="envelope-back"></div>
+
+                    <div class="letter"></div>
+
+                    <div class="envelope-front"></div>
+
+                    <div class="flap"></div>
+
+                    <div class="seal">
+                        💜
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="click-text">
+                Click the envelope 💌
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         SCREEN 2
+    ========================= -->
+
+    <section class="screen hidden" id="choiceScreen">
+
+        <div class="choice-box">
+
+            <h2>May message ako para sa'yo 💜</h2>
+
+            <p>
+                Pili ka lang kung gusto mong basahin.
+            </p>
+
+            <div class="buttons">
+
+                <button class="choice-btn open-btn" onclick="showMessage()">
+                    💌 OPEN
+                </button>
+
+                <button class="choice-btn close-btn" onclick="showSad()">
+                    📄 CLOSE
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         SCREEN 3
+    ========================= -->
+
+    <section class="screen hidden" id="sadScreen">
+
+        <div class="choice-box sad-box">
+
+            <div class="sad">
+                🥺💔
+            </div>
+
+            <h2>Sigurado ka ba?</h2>
+
+            <p>
+                Ayaw mo talaga basahin? 🥺
+                <br>
+                May konting message lang naman para sa'yo.
+            </p>
+
+            <button class="back-btn" onclick="goBack()">
+                ← Back
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         SCREEN 4 - MESSAGE
+    ========================= -->
+
+    <section class="screen hidden message-screen" id="messageScreen">
+
+        <div class="paper">
+
+            <div class="paper-heart">
+                💜
+            </div>
+
+            <h1>
+                Happy October 1,
+                <b>Lieynnie</b> 💜
+            </h1>
+
+
+            <p>
+                Gusto ko lang sabihin sa’yo ngayong October 1 na sana maging
+                mabait sa’yo itong bagong buwan. Sana mas marami kang good
+                days kaysa bad days, mas maraming dahilan para ngumiti, at
+                mas maraming moments na genuinely magiging masaya ka.
+            </p>
+
+
+            <p>
+                Wala ka mang bebe ngayon, okay lang ’yan. Hindi naman kailangan
+                na may someone beside you para maging special yung life mo.
+                Enjoy mo lang muna yung peace mo, gawin mo yung mga bagay na
+                gusto mo, and focus ka lang sa sarili mo. Darating din naman
+                yung tamang tao kapag tamang panahon na.
+            </p>
+
+
+            <p>
+                And honestly, I'm happy na okay ka na rin. Deserve mo yung
+                peace na meron ka ngayon. Sana kapag dumating ulit yung taong
+                para sa’yo, maging someone siya na bibigyan ka ng genuine
+                happiness at hindi ka pahihirapan kung saan ka nakapwesto
+                sa buhay niya.
+            </p>
+
+
+            <p>
+                Pero habang wala pa, enjoy mo lang muna pagiging single.
+                Gawin mo lahat ng gusto mo, focus ka sa sarili mo, sa dreams
+                mo, at sa mga bagay na nagpapasaya sa’yo. Walang kailangan
+                madaliin.
+            </p>
+
+
+            <p>
+                Andito lang naman ako as your best friend. Hindi man ako
+                makapagbigay ng lahat ng advice sa mundo, at least may isang
+                taong pwede mong tawagan, kulitin, kausapin, o sabihan ng
+                random na bagay kahit minsan wala namang sense.
+            </p>
+
+
+            <p>
+                Sana lagi mong maalala na you're doing fine. Hindi mo kailangang
+                habulin yung love. Darating din ’yan sa tamang time. For now,
+                just enjoy life, be happy, and take care of yourself.
+                You deserve good things, always.
+            </p>
+
+
+            <div class="signature">
+
+                Happy October 1, Lieynnie. 💜
+
+                <br>
+
+                Enjoy your month and take care of yourself always.
+
+                <br><br>
+
+                <b>Your best friend is always here. 🤍</b>
+
+            </div>
+
+
+            <button class="restart" onclick="restart()">
+                ↩ Back to Start
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <script>
+
+        const introScreen =
+            document.getElementById("introScreen");
+
+        const choiceScreen =
+            document.getElementById("choiceScreen");
+
+        const sadScreen =
+            document.getElementById("sadScreen");
+
+        const messageScreen =
+            document.getElementById("messageScreen");
+
+        const envelope =
+            document.getElementById("envelope");
+
+        const music =
+            document.getElementById("music");
+
+        const musicBtn =
+            document.getElementById("musicBtn");
+
+
+        let musicStarted = false;
+
+
+        /* =========================
+           ENVELOPE
+        ========================= */
+
+        function openEnvelope() {
+
+            if (envelope.classList.contains("opening")) {
+                return;
+            }
+
+            envelope.classList.add("opening");
+
+            startMusic();
+
+            setTimeout(() => {
+
+                introScreen.classList.add("hidden");
+
+                choiceScreen.classList.remove("hidden");
+
+            }, 1200);
+        }
+
+
+        /* =========================
+           MUSIC
+        ========================= */
+
+        function startMusic() {
+
+            if (!musicStarted) {
+
+                music.volume = 0.45;
+
+                music.play()
+                    .then(() => {
+
+                        musicStarted = true;
+
+                        musicBtn.innerHTML = "🔊";
+
+                    })
+                    .catch(() => {
+
+                        musicBtn.innerHTML = "🎵";
+
+                    });
+            }
+        }
+
+
+        function toggleMusic() {
+
+            if (music.paused) {
+
+                music.play();
+
+                musicBtn.innerHTML = "🔊";
+
+            } else {
+
+                music.pause();
+
+                musicBtn.innerHTML = "🔇";
+
+            }
+        }
+
+
+        /* =========================
+           OPEN MESSAGE
+        ========================= */
+
+        function showMessage() {
+
+            choiceScreen.classList.add("hidden");
+
+            messageScreen.classList.remove("hidden");
+
+            startMusic();
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        }
+
+
+        /* =========================
+           CLOSE
+        ========================= */
+
+        function showSad() {
+
+            choiceScreen.classList.add("hidden");
+
+            sadScreen.classList.remove("hidden");
+
+        }
+
+
+        /* =========================
+           BACK
+        ========================= */
+
+        function goBack() {
+
+            sadScreen.classList.add("hidden");
+
+            choiceScreen.classList.remove("hidden");
+
+        }
+
+
+        /* =========================
+           RESTART
+        ========================= */
+
+        function restart() {
+
+            messageScreen.classList.add("hidden");
+
+            choiceScreen.classList.add("hidden");
+
+            sadScreen.classList.add("hidden");
+
+            envelope.classList.remove("opening");
+
+            introScreen.classList.remove("hidden");
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+
+        }
+
+    </script>
+
+</body>
+
+</html>
